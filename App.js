@@ -67,7 +67,7 @@ export default function App() {
             <Text style={styles.temp}>{Math.round(weather.main.temp)}°C</Text>
             <Text style={styles.desc}>{weather.weather[0].description}</Text>
 
-            
+
         </View>
     );
 }
