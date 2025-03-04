@@ -1,10 +1,18 @@
 import React from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, ActivityIndicator, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import {
+    View,
+    Text,
+    ActivityIndicator,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+} from "react-native";
 import * as Location from "expo-location";
 import axios from "axios";
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 
 const Stack = createStackNavigator();
 const API_KEY = "a3e4cd436cc2cbb0c907419be4f189cb";
@@ -66,12 +74,14 @@ function HomeScreen({ navigation }) {
             />
             <Text style={styles.temp}>{Math.round(weather.main.temp)}°C</Text>
             <Text style={styles.desc}>{weather.weather[0].description}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={styles.forecastButton}
-                onPress={() => navigation.navigate('Forecast', { 
-                    lat: weather.coord.lat, 
-                    lon: weather.coord.lon 
-                })}
+                onPress={() =>
+                    navigation.navigate("Forecast", {
+                        lat: weather.coord.lat,
+                        lon: weather.coord.lon,
+                    })
+                }
             >
                 <Text style={styles.forecastButtonText}>5-Day Forecast</Text>
             </TouchableOpacity>
@@ -119,26 +129,35 @@ function ForecastScreen({ route }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>5-Day Forecast</Text>
-            {forecast && forecast.list
-                .filter((item, index) => index % 8 === 0) // Get one reading per day
-                .map((item, index) => (
-                    <View key={index} style={styles.forecastItem}>
-                        <Text style={styles.forecastDate}>
-                            {new Date(item.dt * 1000).toLocaleDateString()}
-                        </Text>
-                        <Image
-                            source={{
-                                uri: `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
-                            }}
-                            style={styles.forecastIcon}
-                        />
-                        <Text style={styles.forecastTemp}>{Math.round(item.main.temp)}°C</Text>
-                        <Text style={styles.forecastDesc}>{item.weather[0].description}</Text>
-                    </View>
-                ))}
-        </View>
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.title}>5-Day Forecast</Text>
+                {forecast &&
+                    forecast.list
+                        .filter((item, index) => index % 8 === 0) // Get one reading per day
+                        .map((item, index) => (
+                            <View key={index} style={styles.forecastItem}>
+                                <Text style={styles.forecastDate}>
+                                    {new Date(
+                                        item.dt * 1000
+                                    ).toLocaleDateString()}
+                                </Text>
+                                <Image
+                                    source={{
+                                        uri: `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
+                                    }}
+                                    style={styles.forecastIcon}
+                                />
+                                <Text style={styles.forecastTemp}>
+                                    {Math.round(item.main.temp)}°C
+                                </Text>
+                                <Text style={styles.forecastDesc}>
+                                    {item.weather[0].description}
+                                </Text>
+                            </View>
+                        ))}
+            </View>
+        </ScrollView>
     );
 }
 
